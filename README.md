@@ -1,3 +1,4 @@
 # Emoscript
-A new programming language in is in Emojis. 🖨️("Hello world")
+## 🖨️("Hello world")
+A new programming language in is in Emojis.
  
