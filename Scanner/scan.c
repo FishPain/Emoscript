@@ -1,6 +1,6 @@
-#include "data.h";
-#include "defs.h";
-#include "decl.h";
+#include "defs.h"
+#include "data.h"
+#include "decl.h"
 
 // Get the next character form the input file
 static int next(void) {
@@ -11,7 +11,7 @@ static int next(void) {
         return c;
     }
 
-    c = fget(Infile);
+    c = fgetc(Infile);
     if ('\n' == c){
         Line++;
     }
@@ -35,6 +35,32 @@ static int skip(void){
     return (c);
 }
 
+// Return the position of character c
+// in string s, or -1 if c not found
+static int chrpos(char *s, int c) {
+  char *p;
+
+  p = strchr(s, c);
+  return (p ? p - s : -1);
+}
+
+// value from the input file. Store
+// the value as a string in Text.
+static int scanint(int c) {
+  int k, val = 0;
+
+  // Convert each character into an int value
+  while ((k = chrpos("0123456789", c)) >= 0) {
+    val = val * 10 + k;
+    c = next();
+  }
+
+  // We hit a non-integer character, put it back.
+  putback(c);
+  return val;
+}
+
+
 
 int scan(struct token *t){
   int c;
@@ -43,8 +69,6 @@ int scan(struct token *t){
 
   switch (c)
   {
-  case EOF:
-    return (0);
   case '+':
     t -> token = T_PLUS;
   case '-':
@@ -64,31 +88,4 @@ int scan(struct token *t){
     exit(1);
   }
   return (1);
-}
-
-
-// Scan and return an integer literal
-// value from the input file. Store
-// the value as a string in Text.
-static int scanint(int c) {
-  int k, val = 0;
-
-  // Convert each character into an int value
-  while ((k = chrpos("0123456789", c)) >= 0) {
-    val = val * 10 + k;
-    c = next();
-  }
-
-  // We hit a non-integer character, put it back.
-  putback(c);
-  return val;
-}
-
-// Return the position of character c
-// in string s, or -1 if c not found
-static int chrpos(char *s, int c) {
-  char *p;
-
-  p = strchr(s, c);
-  return (p ? p - s : -1);
 }
